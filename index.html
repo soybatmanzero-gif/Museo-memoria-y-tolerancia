@@ -583,27 +583,11 @@
     <p style="max-width:56ch;color:var(--text-dim);margin-top:10px;">Responde a la pregunta central con tu propia reflexión. Los comentarios se guardan de forma permanente y pública.</p>
 
     <!--
-      CONFIGURACIÓN DE GISCUS — reemplaza los 4 valores marcados con [ ]
-      Sácalos de https://giscus.app después de activar "Discussions"
-      en tu repositorio de GitHub (Settings → General → Features → Discussions).
+      Configuración de giscus: soybatmanzero-gif/Museo-memoria-y-tolerancia
+      Se carga por JavaScript (ver loadGiscus() más abajo) solo cuando entras
+      a esta pestaña, para evitar el bug de altura cuando el widget carga oculto.
     -->
-    <div id="giscusMount" style="margin-top:26px;">
-      <script src="https://giscus.app/client.js"
-        data-repo="soybatmanzero-gif/Museo-memoria-y-tolerancia"
-        data-repo-id="R_kgDOTVkX1Q"
-        data-category="General"
-        data-category-id="DIC_kwDOTVkX1c4DA_Lp"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="dark_dimmed"
-        data-lang="es"
-        crossorigin="anonymous"
-        async>
-      </script>
-    </div>
+    <div id="giscusMount" style="margin-top:26px;"></div>
   </section>
 </main>
 
@@ -654,7 +638,33 @@ function showPage(id){
   document.getElementById("page-"+id).classList.add("active");
   document.querySelectorAll(".navlinks a").forEach(a=>a.classList.toggle("active", a.dataset.page===id));
   window.scrollTo({top:0, behavior:"instant" in document.documentElement.style ? "instant" : "auto"});
+  if(id === "mensajes") loadGiscus();
 }
+
+// ---------- giscus: cargar solo cuando la página ya es visible ----------
+let giscusLoaded = false;
+function loadGiscus(){
+  if(giscusLoaded) return;
+  giscusLoaded = true;
+  const mount = document.getElementById("giscusMount");
+  const script = document.createElement("script");
+  script.src = "https://giscus.app/client.js";
+  script.setAttribute("data-repo", "soybatmanzero-gif/Museo-memoria-y-tolerancia");
+  script.setAttribute("data-repo-id", "R_kgDOTVkX1Q");
+  script.setAttribute("data-category", "General");
+  script.setAttribute("data-category-id", "DIC_kwDOTVkX1c4DA_Lp");
+  script.setAttribute("data-mapping", "pathname");
+  script.setAttribute("data-strict", "0");
+  script.setAttribute("data-reactions-enabled", "1");
+  script.setAttribute("data-emit-metadata", "0");
+  script.setAttribute("data-input-position", "top");
+  script.setAttribute("data-theme", "dark_dimmed");
+  script.setAttribute("data-lang", "es");
+  script.setAttribute("crossorigin", "anonymous");
+  script.async = true;
+  mount.appendChild(script);
+}
+
 document.querySelectorAll("[data-page]").forEach(el=>{
   el.addEventListener("click", ()=>{
     showPage(el.dataset.page);
